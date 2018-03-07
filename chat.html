@@ -44,7 +44,7 @@
     </head>
     <nav class="navbar navbar-light bg-faded">
             <form class="form-inline" action="/" method="post" id="formulaire_room">
-              <input class="form-control mr-sm-2" type="text" placeholder="Nom de la room">
+              <input id="room" class="form-control mr-sm-2" type="text" placeholder="Nom de la room">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rejoindre</button>
             </form>
           </nav>
@@ -91,8 +91,8 @@
             })
 
             // Quand un nouveau client se connecte, on affiche l'information
-            socket.on('nouveau_client', function(pseudo) {
-                $('#zone_chat').prepend('<p><em>' + pseudo + ' a rejoint le Chat !</em></p>');
+            socket.on('notification', function(message) {
+                $('#zone_chat').prepend('<p><em>' + message + '</em></p>');
             })
 
             socket.on('disconnect', function(){
@@ -103,8 +103,15 @@
             // Lorsqu'on envoie le formulaire, on transmet le message et on l'affiche sur la page
             $('#formulaire_chat').submit(function () {
                 var message = $('#message').val();
-                socket.emit('message', message); // Transmet le message aux autres
+                socket.emit('message', message, room); // Transmet le message aux autres
                 insereMessage(pseudo, message); // Affiche le message aussi sur notre page
+                $('#message').val('').focus(); // Vide la zone de Chat et remet le focus dessus
+                return false; // Permet de bloquer l'envoi "classique" du formulaire
+            });
+
+            $('#formulaire_room').submit(function () {
+                var room = $('#room').val();
+                socket.emit('rejoindre_room', room); // Transmet le message aux autres
                 $('#message').val('').focus(); // Vide la zone de Chat et remet le focus dessus
                 return false; // Permet de bloquer l'envoi "classique" du formulaire
             });
@@ -117,6 +124,8 @@
             function deconnection(pseudo){
                 $('#zone_chat').prepend('<p><em>' + pseudo + ' a quitte le Chat !</em></p>');
             }
+
+
         </script>
     </body>
 </html>
