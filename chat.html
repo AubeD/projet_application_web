@@ -7,18 +7,54 @@
             #zone_chat strong {
                 color: white;
                 background-color: black;
-                padding: 2px;
-            }
+                padding: 2px;}
+
+
+ .talkbubble {
+    width: 300px;
+    background: #00bfb6;
+    padding: 20px;
+    text-align: center;
+    font-weight: 900;
+    color: #fff;
+    font-family: arial;
+    position: relative;
+}
+.talkbubble:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid transparent;
+    border-right: 10px solid #00bfb6;
+    border-top: 10px solid #00bfb6;
+    border-bottom: 10px solid transparent;
+    left: -19px;
+    top: 6px;
+}
+.pseudo{
+    font-weight: 900;
+    color: #00bfb6;
+    font-family: arial;
+}
+            
         </style>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" crossorigin="anonymous">
     </style>
     </head>
+    <nav class="navbar navbar-light bg-faded">
+            <form class="form-inline" action="/" method="post" id="formulaire_room">
+              <input class="form-control mr-sm-2" type="text" placeholder="Nom de la room">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rejoindre</button>
+            </form>
+          </nav>
+          <br>
     <div class="container"></div>
     
             <div class="jumbotron">
                     <section id="zone_chat">
                         </section>
-                        
+                    
             
         
 
@@ -75,7 +111,7 @@
             
             // Ajoute un message dans la page
             function insereMessage(pseudo, message) {
-                $('#zone_chat').prepend('<p><strong>' + pseudo + '</strong> ' + message + '</p>');
+                $('#zone_chat').prepend('<span class= "pseudo">' + pseudo +'</span> &nbsp &nbsp' + '<div class="talkbubble">'+ message +'</div></p>');
             }
 
             function deconnection(pseudo){
