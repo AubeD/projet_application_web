@@ -338,8 +338,10 @@
                 var minute  = ('0'+now.getMinutes()).slice(-2);
                 var seconde = ('0'+now.getSeconds()).slice(-2);
             $('#zone_chat').append('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div><em style="font-size:10px;">' +  jour+"/"+mois+"/"+annee+" "+heure+":"+minute+ '</em></li>');
-                
+            var l = document.getElementsByClassName("chatMessages").length;
+            document.getElementsByClassName("chatMessages")[l-1].scrollIntoView();
             }
+
 
         
 
