@@ -309,7 +309,7 @@
 
             // Quand un nouveau client se connecte ou se deconnecte, on affiche l'information
             socket.on('notification', function(message) {
-                $('#zone_chat').prepend('<p><em>' + message + '</em></p>');
+                $('#zone_chat').append('<p><em>' + message + '</em></p>');
             })
 
             // Lorsqu'on envoie le formulaire, on transmet le message et on l'affiche sur la page
@@ -330,7 +330,7 @@
             
             // Ajoute un message dans la page
             function insereMessage(pseudo, message) {
-            $('#zone_chat').prepend('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div></li>');
+            $('#zone_chat').append('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div></li>');
         }
 
         
