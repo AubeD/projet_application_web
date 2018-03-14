@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket, pseudo) {
     }); 
 
     socket.on('disconnect', function(){
-        socket.broadcast.emit('disconnect');
+        socket.broadcast.to(socket.room).emit('notification', socket.pseudo+" s'est deconnecte.");
     });
 });
 
