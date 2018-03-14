@@ -24,7 +24,7 @@
         body {
             margin-top: 20px;
             background: #ebeef0;
-            font-size: 20px;
+            
         }
 
         .panel {
@@ -32,7 +32,7 @@
             border-radius: 0;
             border: 0;
             margin-bottom: 24px;
-            font-size: 200;
+            
         }
 
         .panel .panel-heading,
@@ -238,7 +238,7 @@
 
             color: white;
             font-family: "Comic Sans MS";
-            font-size: 200 !important;
+            
         }
     </style>
 </head>
@@ -279,10 +279,11 @@
                         <form action="/" method="post" id="formulaire_chat">
                             <div class="row">
                             <div class="col-xs-9">
-                                <textarea style ="font-size: 25;" id="message" class="form-control" placeholder="Votre message..."></textarea>
+                                <textarea style ="font-size: 15px;" id="message" class="form-control" placeholder="Votre message..."></textarea>
                             </div>
                             <div class="col-xs-3">
                                 <input type="submit" id="envoi_message" class="btn btn-success" value="Envoyer" />
+                    
                             </div>
                         </form>
                     </div>
@@ -325,7 +326,16 @@
 
         // Ajoute un message dans la page
         function insereMessage(pseudo, message) {
-            $('#zone_chat').prepend('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div></li>');
+            var now = new Date();
+ 
+var annee   = now.getFullYear();
+var mois    = ('0'+now.getMonth()+1).slice(-2);
+var jour    = ('0'+now.getDate()   ).slice(-2);
+var heure   = ('0'+now.getHours()  ).slice(-2);
+var minute  = ('0'+now.getMinutes()).slice(-2);
+var seconde = ('0'+now.getSeconds()).slice(-2);
+            $('#zone_chat').prepend('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div><em style="font-size:10px;">' +  jour+"/"+mois+"/"+annee+" "+heure+":"+minute+ '</em></li>');
+
         }
 
         function deconnection(pseudo) {
