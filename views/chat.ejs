@@ -20,6 +20,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
+
+        .btn:focus, .upload-btn:focus{
+            outline: 0 !important;
+        }
+
+
+        .upload-btn {
+            color: #ffffff;
+            background-color: #F89406;
+            border: none;
+        }
+
+        .upload-btn:hover,
+        .upload-btn:focus,
+        .upload-btn:active,
+        .upload-btn.active {
+            color: #ffffff;
+            background-color: #FA8900;
+            border: none;
+        }
+
+        #upload-input {
+            display: none;
+        }
+
+        
+
+
         body {
             margin-top: 20px;
             background: #ebeef0;
@@ -28,9 +56,18 @@
 
         .panel {
             box-shadow: 0 2px 0 rgba(0, 0, 0, 0.075);
-            border-radius: 0;
+            border-radius: 10px;
             border: 0;
             margin-bottom: 24px;
+            font-size: 200;
+        }
+
+        .panel-footer{
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.075);
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border: 0;
+            margin-bottom: 30px;
             font-size: 200;
         }
 
@@ -83,8 +120,7 @@
 
         .nano>.nano-content {
             position: absolute;
-            overflow: auto;
-            overflow-x: hidden;
+            overflow: scroll;
             top: 0;
             right: 0;
             bottom: 0;
@@ -252,18 +288,18 @@
                     <div class="panel-control">
                         <nav class="navbar navbar-light bg-faded">
                             <form class="form-inline" action="/" method="post" id="formulaire_room">
-                                <input class="form-control mr-sm-2" type="text" placeholder="Nom de la room">
+                                <input class="form-control mr-sm-2" type="text" placeholder="Nom de la room" id="room">
                                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rejoindre</button>
                             </form>
                         </nav>
                     </div>
-                    <h3 class="panel-title">Chat</h3>
+                    <h3 class="panel-title" style="color: rgb(245, 147, 147);">Chat Room</h3>
                 </div>
             
                 <!--Widget body-->
                 <div id="demo-chat-body" class="collapse in">
                     <div class="nano has-scrollbar" style="height:380px">
-                        <div class="nano-content pad-all" tabindex="0" style="right: -17px;">
+                        <div class="nano-content pad-all" id="scroll_zone" tabindex="0" style="right: -17px;">
                             <ul class="list-unstyled media-block">
                                 <section id="zone_chat"></section>
                             </ul>
@@ -273,18 +309,34 @@
                         </div>
                     </div>
                     <!--Widget footer-->
-                    <div class="panel-footer">
-                        
+                    <div class="panel-footer" style="border: 0 10px 0 10px;">
                         <form action="/" method="post" id="formulaire_chat">
-                            <div class="row">
-                            <div class="col-xs-9">
+                           
+                            <div class="col-xs-6">
                                 <textarea style ="font-size: 25;" id="message" class="form-control" placeholder="Votre message..."></textarea>
                             </div>
                             <div class="col-xs-3">
                                 <input type="submit" id="envoi_message" class="btn btn-success" value="Envoyer" />
                             </div>
                         </form>
+
+                        <!--Uploading-->
+                        <form action="fileupload" method="post" id="formulaire_file" enctype="multipart/form-data">
+                            <div>
+                            <input type="file" id="upload-input"  name="uploads[]" multiple="multiple">
+                          </div>
+                            
+                        </form>
+                        <div class="col-xs-3">
+                        <button class="btn upload-btn" type="button" style="background-color:rgb(27, 86, 131);">Upload File</button>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar"></div>
+                        </div>
                     </div>
+                  
+
+                    
    
 
         
@@ -298,7 +350,7 @@
             var socket = io.connect('http://localhost:8080');
 
             // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
-            var pseudo = prompt('Quel est votre pseudo ?');
+            var pseudo = "<%= pseudo %>";
             socket.emit('nouveau_client', pseudo);
             document.title = pseudo + ' - ' + document.title;
 
@@ -310,6 +362,10 @@
             // Quand un nouveau client se connecte ou se deconnecte, on affiche l'information
             socket.on('notification', function(message) {
                 $('#zone_chat').append('<p><em>' + message + '</em></p>');
+            })
+
+            socket.on('file', function(data) {
+                insereFile(pseudo, file_name);
             })
 
             // Lorsqu'on envoie le formulaire, on transmet le message et on l'affiche sur la page
@@ -327,6 +383,80 @@
                 $('#message').val('').focus(); // Vide la zone de Chat et remet le focus dessus
                 return false; // Permet de bloquer l'envoi "classique" du formulaire
             });
+
+
+
+            $('.upload-btn').on('click', function (){
+                $('#upload-input').click();
+                $('.progress-bar').text('0%');
+                $('.progress-bar').width('0%');
+            });
+
+            $('#upload-input').on('change', function(){
+
+                var files = $(this).get(0).files;
+
+                if (files.length > 0){
+                    var formData = new FormData();
+
+                // loop through all the selected files
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+
+                        // add the files to formData object for the data payload
+                        formData.append('uploads[]', file, file.name);
+                    }
+                    
+                    $.ajax({
+                      url: '/upload',
+                      type: 'POST',
+                      data: formData,
+                      processData: false,
+                      contentType: false,
+                      success: function(data){
+                          console.log('upload successful!');
+                      },
+                      xhr: function() {
+                      // create an XMLHttpRequest
+                      var xhr = new XMLHttpRequest();
+
+                      // listen to the 'progress' event
+                      xhr.upload.addEventListener('progress', function(evt) {
+
+                        if (evt.lengthComputable) {
+                          // calculate the percentage of upload completed
+                          var percentComplete = evt.loaded / evt.total;
+                          percentComplete = parseInt(percentComplete * 100);
+
+                          // update the Bootstrap progress bar with the new percentage
+                          $('.progress-bar').text(percentComplete + '%');
+                          $('.progress-bar').width(percentComplete + '%');
+
+                          // once the upload reaches 100%, set the progress bar text to done
+                          if (percentComplete === 100) {
+                            $('.progress-bar').html('Done');
+                          }
+
+                        }
+
+                      }, false);
+
+                      return xhr;
+                      }
+                    });   
+
+                }
+                var file_name = $('#upload-input').val();
+                socket.emit('file', file_name); // Transmet le message aux autres
+                insereFile(pseudo, file_name); // Affiche le message aussi sur notre page
+                $('#file').val('').focus(); // Vide la zone de Chat et remet le focus dessus
+                return false; // Permet de bloquer l'envoi "classique" du formulaire
+
+            });
+
+
+
+
             
             // Ajoute un message dans la page
             function insereMessage(pseudo, message) {
@@ -338,14 +468,30 @@
                 var minute  = ('0'+now.getMinutes()).slice(-2);
                 var seconde = ('0'+now.getSeconds()).slice(-2);
             $('#zone_chat').append('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div><em style="font-size:10px;">' +  jour+"/"+mois+"/"+annee+" "+heure+":"+minute+ '</em></li>');
-            var l = document.getElementsByClassName("chatMessages").length;
-            document.getElementsByClassName("chatMessages")[l-1].scrollIntoView();
+            var objDiv = document.getElementById("scroll_zone");
+            objDiv.scrollTop = objDiv.scrollHeight;
+           
             }
 
+            function insereFile(pseudo, file_name) {
+                var now = new Date();
+                var annee   = now.getFullYear();
+                var mois    = ('0'+now.getMonth()+1).slice(-2);
+                var jour    = ('0'+now.getDate()   ).slice(-2);
+                var heure   = ('0'+now.getHours()  ).slice(-2);
+                var minute  = ('0'+now.getMinutes()).slice(-2);
+                var seconde = ('0'+now.getSeconds()).slice(-2);
+                var message = "Fichier: <a target=\"__blank\" href=http://localhost:8080/"+file_name.split('\\')[2]+">"+file_name.split('\\')[2]+ " </a>"
+                $('#zone_chat').append('<li class="mar-btm"><div class="media-body pad-hor"><div class="speech"><a href="#" class="media-heading pseudo"> <strong>' + pseudo + '</strong></a><p class="message">' + message + '</p></div></div><em style="font-size:10px;">' +  jour+"/"+mois+"/"+annee+" "+heure+":"+minute+ '</em></li>');
+            var objDiv = document.getElementById("scroll_zone");
+            objDiv.scrollTop = objDiv.scrollHeight;
+           
+            }
+            
 
-        
-
-
+            function viewImage(id, image) {
+                document.getElementById(id).innerHTML="<img src="+ image +">";
+            }
         </script>
     </body>
 </html>
