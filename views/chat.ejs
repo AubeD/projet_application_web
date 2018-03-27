@@ -275,6 +275,15 @@
             font-family: "Comic Sans MS";
             font-size: 200 !important;
         }
+        #progress-bar {
+    width: 100%;
+    background-color: #e9e9e9;
+}
+#Bar {
+    width: 0%;
+    height: 10px;
+    background-color: green;
+}
     </style>
 </head>
             
@@ -313,7 +322,7 @@
                         <form action="/" method="post" id="formulaire_chat">
                            
                             <div class="col-xs-6">
-                                <textarea style ="font-size: 25;" id="message" class="form-control" placeholder="Votre message..."></textarea>
+                                <textarea style ="font-size: 25;" id="message" class="form-control" placeholder="Votre message..." rows="1"></textarea>
                             </div>
                             <div class="col-xs-3">
                                 <input type="submit" id="envoi_message" class="btn btn-success" value="Envoyer" />
@@ -328,12 +337,17 @@
                             
                         </form>
                         <div class="col-xs-3">
-                        <button class="btn upload-btn" type="button" style="background-color:rgb(27, 86, 131);">Upload File</button>
+                        <button class="btn upload-btn" type="button" style="background-color:rgb(27, 86, 131);" onclick="move()" >Upload File</button>
                         </div>
+                        <br><br>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar"></div>
-                        </div>
+              <div class="progress-bar" role="progressbar"></div>
+            </div>
                     </div>
+                </div>
+            </div>
+    </div>
+    
                   
 
                     
@@ -487,11 +501,7 @@
             objDiv.scrollTop = objDiv.scrollHeight;
            
             }
-            
-
-            function viewImage(id, image) {
-                document.getElementById(id).innerHTML="<img src="+ image +">";
-            }
+        
         </script>
     </body>
 </html>

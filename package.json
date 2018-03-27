@@ -1,24 +1,16 @@
 {
-  "name": "super-chat",
+  "name": "knowledge-sharing-platform",
   "version": "0.1.0",
   "dependencies": {
-<<<<<<< HEAD
     "body-parser": "^1.18.2",
     "ejs": "^2.5.7",
     "ent": "~0.1.0",
     "express": "~3.3.4",
     "formidable": "^1.2.1",
     "npm": "^5.7.1",
-=======
-    "body-parser": "1.18.2",
-    "ejs": "2.5.7",
-    "ent": "~0.1.0",
-    "express": "~3.3.4",
-    "formidable": "^1.2.1",
->>>>>>> e7231e64e0a6ce1bfa5aa1219c1bc9e67fa7c2a0
     "path": "0.12.7",
     "socket.io": "~1.2.1"
   },
-  "author": "Aube <aube@email.com>",
-  "description": "Un super Chat temps réel avec socket.io"
+  "author": "Océane et Soumaya",
+  "description": "Une platforme de chat permettant l'échange de fichiers."
 }
