@@ -87,8 +87,8 @@ io.sockets.on('connection', function (socket, pseudo) {
     socket.pseudo = pseudo;
     socket.room = "room1";
     socket.join("room1");
-    socket.emit('notification', 'you have connected to room1');
-    socket.broadcast.to('room1').emit('notification', pseudo + " s'est connecte");
+    socket.emit('notification', 'Vous vous êtes connecté à la room : room1');
+    socket.broadcast.to('room1').emit('notification', pseudo + " s'est connecté.");
 
   });
 
@@ -104,9 +104,9 @@ io.sockets.on('connection', function (socket, pseudo) {
   socket.on('rejoindre_room', function (room) {
     socket.leave(socket.room);
     socket.join(room);
-    socket.broadcast.to(socket.room).emit('notification', socket.pseudo + ' has left this room');
+    socket.broadcast.to(socket.room).emit('notification', socket.pseudo + ' a quitté cette room');
     socket.room = room;
-    socket.emit('notification', 'you have connected to ' + socket.room);
+    socket.emit('notification', 'Vous vous êtes connecté à la room : ' + socket.room);
     socket.broadcast.to(socket.room).emit('notification', socket.pseudo + ' a rejoint cette room');
   });
 
@@ -120,7 +120,7 @@ io.sockets.on('connection', function (socket, pseudo) {
 
 
   socket.on('disconnect', function () {
-    socket.broadcast.to(socket.room).emit('notification', socket.pseudo + " s'est deconnecte");
+    socket.broadcast.to(socket.room).emit('notification', socket.pseudo + " s'est deconnecté.");
   });
 
 
